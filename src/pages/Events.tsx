@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react"
 import Header from "./Header"
-import { useAuth } from "../context/authContext"
-import { getAllEvents, createEvent, type Event } from "../services/events"
+// import { useAuth } from "../context/authContext"
+import { getAllEvents, type Event } from "../services/events"
 
 export default function EventsPage() {
-  const { user } = useAuth()
+  //const { user } = useAuth()
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [form, setForm] = useState<Partial<Event>>({
-    title: "",
-    description: "",
-    date: "",
-    location: "",
-    price: 0,
-    availableSeats: 0,
-    category: "",
-    image: ""
-  })
-  const [submitting, setSubmitting] = useState(false)
+  // const [form, setForm] = useState<Partial<Event>>({
+  //   title: "",
+  //   description: "",
+  //   date: "",
+  //   location: "",
+  //   price: 0,
+  //   availableSeats: 0,
+  //   category: "",
+  //   image: ""
+  // })
+  //const [submitting, setSubmitting] = useState(false)
 
   // New state for filtering (NO LOGIC CHANGE - just UI state)
   const [searchQuery, setSearchQuery] = useState("")
@@ -40,48 +40,48 @@ export default function EventsPage() {
     fetchEvents()
   }, [])
 
-  const handleChange = (field: keyof Event, value: string | number) => {
-    setForm(prev => ({ ...prev, [field]: value }))
-  }
+  // const handleChange = (field: keyof Event, value: string | number) => {
+  //   setForm(prev => ({ ...prev, [field]: value }))
+  // }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!user || !user.roles?.includes("ADMIN")) {
-      alert("Only admin can add events")
-      return
-    }
-    if (!form.title || !form.date || !form.location || !form.category) {
-      alert("Please fill required fields: title, date, location, category")
-      return
-    }
-    if ((form.price ?? 0) < 0 || (form.availableSeats ?? 0) < 0) {
-      alert("Price and available seats must be non-negative")
-      return
-    }
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault()
+  //   if (!user || !user.roles?.includes("ADMIN")) {
+  //     alert("Only admin can add events")
+  //     return
+  //   }
+  //   if (!form.title || !form.date || !form.location || !form.category) {
+  //     alert("Please fill required fields: title, date, location, category")
+  //     return
+  //   }
+  //   if ((form.price ?? 0) < 0 || (form.availableSeats ?? 0) < 0) {
+  //     alert("Price and available seats must be non-negative")
+  //     return
+  //   }
 
-    try {
-      setSubmitting(true)
-      const payload = {
-        title: form.title as string,
-        description: (form.description as string) || "",
-        date: form.date as string,
-        location: form.location as string,
-        price: Number(form.price ?? 0),
-        availableSeats: Number(form.availableSeats ?? 0),
-        category: form.category as string,
-        image: (form.image as string) || ""
-      }
-      const created = await createEvent(payload)
-      setEvents(prev => [{ ...(created as Event) }, ...prev])
-      setForm({ title: "", description: "", date: "", location: "", price: 0, availableSeats: 0, category: "", image: "" })
-      alert("Event created successfully")
-    } catch (err: any) {
-      console.error("Create event error:", err)
-      alert(err?.response?.data?.message || "Failed to create event")
-    } finally {
-      setSubmitting(false)
-    }
-  }
+  //   try {
+  //     setSubmitting(true)
+  //     const payload = {
+  //       title: form.title as string,
+  //       description: (form.description as string) || "",
+  //       date: form.date as string,
+  //       location: form.location as string,
+  //       price: Number(form.price ?? 0),
+  //       availableSeats: Number(form.availableSeats ?? 0),
+  //       category: form.category as string,
+  //       image: (form.image as string) || ""
+  //     }
+  //     const created = await createEvent(payload)
+  //     setEvents(prev => [{ ...(created as Event) }, ...prev])
+  //     setForm({ title: "", description: "", date: "", location: "", price: 0, availableSeats: 0, category: "", image: "" })
+  //     alert("Event created successfully")
+  //   } catch (err: any) {
+  //     console.error("Create event error:", err)
+  //     alert(err?.response?.data?.message || "Failed to create event")
+  //   } finally {
+  //     setSubmitting(false)
+  //   }
+  // }
 
   // Filter logic (NO CHANGE TO ORIGINAL LOGIC - just filtering display)
   const filteredEvents = events.filter(event => {
